@@ -115,6 +115,22 @@
 
 这类系统最容易做歪的地方是自动给结论，所以我只做到归档和检索，判不判断交给人。
 
+### 🩻 胸部 X 光片多标签分类（NCCcu 2026 人工智能挑战赛）
+
+> <img src="https://img.shields.io/badge/PyTorch%202.10-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" /> <img src="https://img.shields.io/badge/torchvision%20%E5%8E%9F%E7%94%9F-EE4C2C?style=flat-square" /> <img src="https://img.shields.io/badge/ConvNeXt%20%2F%20Swin-8957E5?style=flat-square" /> <img src="https://img.shields.io/badge/Macro--AUC-2EA043?style=flat-square" /> <img src="https://img.shields.io/badge/T4%C2%B7%E2%89%A4100ms-1F6FEB?style=flat-square" />
+
+2026 第八届全国高校计算机能力挑战赛，队里三个人，我做队长兼技术负责人，负责方案、代码、实验迭代和最终提交。
+
+任务是胸片多标签分类，一张片子可以同时存在好几种异常征象，10 个 CheXpert 类别，主指标 Macro-AUC，每天只能交两次。
+
+复赛要提交模型进官方容器验，卡死几条硬约束：单卡 T4 16GB、模型压缩前不超过 500 MB、单图端到端不超过 100 ms、只能用 torchvision 原生实现（timm 这类额外模型库进不了容器）。所以整个方案不是往大了堆，是在预算里挑组合。
+
+线上最高交到 78.06，但那一版是 7 个成员集成，端到端 149 ms，超了延迟线，认定不住。压到 5 个成员是 77.32、83.49 ms，这才站得住。7 员到 5 员掉 0.74，5 员到 4 员只掉 0.18，落差集中在被砍掉的那个换血成员上。最后 16 个方向全部判死，认定天花板定在 77.32。
+
+工程上手上没有 GPU，就在本地写代码、验逻辑，云 GPU 十分钟一轮试错，定稿的批量任务交给队里管算力的同学跑，一次六到八个 run。数据归档下载没完成时没有中央目录，`zipfile` 打不开，写了个顺序解析 local file header 的脚本提前读，顺手全量普查了 2218 张测试图的 JPEG 头。
+
+仓库是私有的，比赛数据不许外传，所以这里只写做法不贴链接。最后记住的是分数和约束打架的时候怎么选。
+
 ---
 
 ## 🕒 现在
